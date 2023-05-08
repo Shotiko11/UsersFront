@@ -30,7 +30,7 @@ export interface State {
 
 export const useStore = create<State>((set) => ({
   data: [],
-  async getData() {
+  getData: async () => {
     try {
       const response = await axios.get<Data[]>("http://localhost:3000/data");
       set({ data: response.data });
@@ -38,11 +38,11 @@ export const useStore = create<State>((set) => ({
       console.error(error);
     }
   },
-  async addData(newData) {
+  addData: async (newData) => {
     try {
       const id = uuidv4();
       const dataWithId = { ...newData, id };
-      const response = await axios.post(
+      const response = await axios.post<Data>(
         "http://localhost:3000/data",
         dataWithId
       );
@@ -51,24 +51,24 @@ export const useStore = create<State>((set) => ({
       console.error(error);
     }
   },
-  async updateData(id, updatedData) {
+  updateData: async (id, updatedData) => {
     try {
       await axios.put(`http://localhost:3000/data/${id}`, updatedData);
-      const data = await axios.get<Data[]>(`http://localhost:3000/data/${id}`);
+      const response = await axios.get<Data>(`http://localhost:3000/data/${id}`);
       set((state) => ({
-        data: state.data.map((d) => (d.id === id ? data.data : d)),
+        data: state.data.map((d) => (d.id === id ? response.data : d)),
       }));
     } catch (error) {
       console.error(error);
     }
   },
-  async deleteData(id) {
+  deleteData: async (id) => {
     try {
       await axios.delete(`http://localhost:3000/data/${id}`);
-      console.dir(id);
-      set((state) => ({ data: state.data.filter((d) => d.id != id) }));
+      set((state) => ({ data: state.data.filter((d) => d.id !== id) }));
     } catch (error) {
       console.error(error);
     }
   },
 }));
+
