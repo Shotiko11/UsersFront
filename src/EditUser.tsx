@@ -30,7 +30,7 @@ export const EditUser: React.FC<EditUserProps> = ({
   const handleSubmit = (values: FormValues) => {
     onEditUser(userData.id, values);
     onClose();
-  };  
+  };
   return (
     <Modal title="Edit user" open={visible} onCancel={onClose} footer={null}>
       <UserForm

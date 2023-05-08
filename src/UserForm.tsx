@@ -13,12 +13,22 @@ interface FormValues {
   name: string;
   email: string;
   gender: string;
-  phone: number;
+  phone: string;
   address: {
     street: string;
     city: string;
+    number: string;
   };
 }
+
+const validatePhone = (rule: any, value: string, callback: any) => {
+  const phoneNumberPattern = /^\+1 \(\d{3}\) \d{3}-\d{4}$/;
+  if (!value.match(phoneNumberPattern)) {
+    callback("Please enter a valid phone number in the format +1 (xxx) xxx-xxxx");
+  } else {
+    callback();
+  }
+};
 
 export const UserForm: React.FC<UserFormProps> = ({
   buttonTitle,
@@ -35,14 +45,14 @@ export const UserForm: React.FC<UserFormProps> = ({
       <Form.Item
         label="Name"
         name="name"
-        rules={[{ required: true, message: "Enter name, it's required" }]}>
+        rules={[{ required: true, message: "Please enter a name" }]}>
         <Input />
       </Form.Item>
       <Form.Item
         label="Email"
         name="email"
         rules={[
-          { required: true, message: "Enter email, it's required" },
+          { required: true, message: "Please enter an email" },
           { type: "email", message: "Please enter a valid email" },
         ]}>
         <Input />
@@ -50,30 +60,16 @@ export const UserForm: React.FC<UserFormProps> = ({
       <Form.Item
         label="Gender"
         name="gender"
-        rules={[{ required: true, message: "Enter gender, it's required" }]}>
+        rules={[{ required: true, message: "Please select a gender" }]}>
         <Select>
           <Select.Option value="male">Male</Select.Option>
           <Select.Option value="female">Female</Select.Option>
-          <Select.Option value="female">Other</Select.Option>
         </Select>
       </Form.Item>
       <Form.Item
-  label="Phone Number"
-  name="phone"
-  rules={[
-    { required: true, message: "Enter phone number, it's required" },
-    {
-      pattern: /^\+1\s\(\d{3}\)\s\d{3}-\d{4}$/,
-      message: "You should enter valid US phone number, format: +1(space)(XXX)(space)XXX-XXXX",
-    },
-  ]}>
-  <Input placeholder="+1" />
-</Form.Item>
-
-      <Form.Item
         label="Address"
         name="address"
-        rules={[{ required: true, message: "Address is required" }]}>
+        rules={[{ required: true, message: "Please enter an address" }]}>
         <Input.Group>
           <Form.Item
             name={["address", "street"]}
@@ -89,6 +85,21 @@ export const UserForm: React.FC<UserFormProps> = ({
           </Form.Item>
         </Input.Group>
       </Form.Item>
+      <Form.Item
+  label="Phone Number"
+  name="phone"
+  rules={[
+    {
+      required: true,
+      message: "Please enter a phone number",
+    },
+    {
+      validator: validatePhone,
+    },
+  ]}
+>
+  <Input />
+</Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
           {buttonTitle}

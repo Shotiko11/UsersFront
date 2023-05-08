@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useStore, Data } from "./Store";
-import { Table, Button, Typography } from "antd";
+import { useStore, Data } from "./store";
+import { Table, Button } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { AddUser } from "./AddUser";
 import { EditUser } from "./EditUser";
@@ -23,8 +23,6 @@ function App() {
   const showAddUserModal = () => {
     setIsModalVisible(true);
   };
-
-  const { Title } = Typography;
 
   const handleCancel = () => {
     setSelectedRow(null);
@@ -78,13 +76,13 @@ function App() {
       dataIndex: "actions",
       key: "actions",
       render: (_, record) => (
-<Button onClick={() => handleDelete(Number(record.id))}>Delete</Button>
+        <Button onClick={() => handleDelete(record.id)}>Delete</Button>
       ),
     },
   ];
   return (
-    <div>
-      <Button type="primary" onClick={showAddUserModal}>Add new user</Button>
+    <div className="App">
+      <Button onClick={showAddUserModal}>Add new user</Button>
       <Table
         dataSource={data}
         columns={columns}

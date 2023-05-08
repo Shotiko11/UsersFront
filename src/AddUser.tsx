@@ -1,8 +1,8 @@
 import { Modal, Form } from "antd";
 import { UserForm } from "./UserForm";
-import { useStore } from "./Store";
+import { useStore } from "./store";
 import React from "react";
-import { Data } from "./Store";
+import { Data } from "./store";
 import { v4 as uuidv4 } from "uuid";
 
 interface AddUserProps {
