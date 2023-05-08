@@ -3,9 +3,13 @@ import { useStore, Data } from "./store";
 import { Table, Input, Button } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { createDraft, finishDraft } from 'immer';
+import * as React from 'react';
+import { AddUser } from "./AddUser";
+
 
 function App() {
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
+  const [isAddUserModalVisible, setIsAddUserModalVisible] = useState(false);
   const data = useStore((state) => state.data);
   const addData = useStore((state) => state.addData);
   const updateData = useStore((state) => state.updateData);
@@ -18,22 +22,22 @@ function App() {
     fetchData();
   }, []);
 
-  const handleAdd = async () => {
-    const newData: Data = {
-      id: Date.now(),
-      name: "New Data",
-      age: 0,
-      email: "",
-      gender: "",
-      address: { street: "", city: "" },
-      phone: "",
-    };
 
-    await addData(newData);
+  
+  const showAddUserModal = () => {
+    setIsAddUserModalVisible(true);
   };
 
+  const handleCancel = () => {
+    setIsAddUserModalVisible(false);
+  };
 
-  const handleUpdate = async (id: number, updatedData: Partial<Data>, event: ChangeEvent<HTMLInputElement>) => {
+  const handleAddUser = async (newData: Data) => {
+    await addData(newData);
+    setIsAddUserModalVisible(false);
+  };
+
+  const handleUpdate = async (id: string, updatedData: Partial<Data>, event: ChangeEvent<HTMLInputElement>) => {
     await updateData(id, updatedData);
   
     // Update the local data array with the new values
@@ -54,13 +58,14 @@ function App() {
     event.preventDefault();
   };
   
+ 
   
   
 
   const handleDelete = async (id: number) => {
-    await deleteData(id);
+    await deleteData(id.toString());
   };
-
+  
   const columns: ColumnsType<Data> = [
     {
       title: "Name",
@@ -147,31 +152,33 @@ function App() {
         ),
     },
     {
-      title: "",
-      dataIndex: "actions",
-      key: "actions",
-      render: (actions, record) => (
-        <>
-          <Button onClick={() => handleDelete(record.id)}>Delete</Button>
-          <Button onClick={() => setSelectedRow(record.id)}>Edit</Button>
-        </>
-      ),
-    },
+    title: "",
+    dataIndex: "actions",
+    key: "actions",
+    render: (actions, record) => (
+      <Button onClick={() => handleDelete(record.id)}>Delete</Button>
+    ),
+  },
+  
     ];
     
     return (
       <div className="App">
-        <Button onClick={handleAdd} style={{ marginBottom: 16 }}>
-          Add Data
-        </Button>
-        <Table
-          dataSource={data}
-          columns={columns}
-          rowKey="id"
-          pagination={{ pageSize: 10 }}
-        />
-      </div>
-    );    
+      <Button onClick={showAddUserModal}>Add new user</Button>
+      <Table
+        dataSource={data}
+        columns={columns}
+        rowKey="id"
+        pagination={{ pageSize: 10 }}
+      />
+      <AddUser
+        visible={isAddUserModalVisible}
+        onCancel={handleCancel}
+        onAddUser={handleAddUser}
+      />
+    </div>
+    );
+          
 }
 
 export default App;

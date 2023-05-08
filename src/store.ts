@@ -1,15 +1,16 @@
 import create from 'zustand';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface Address {
   street: string;
+  number: string;
   city: string;
 }
 
 export interface Data {
-  id: number;
+  id: string;
   name: string;
-  age: number;
   email: string;
   gender: string;
   address: Address;
@@ -19,26 +20,27 @@ export interface Data {
 export interface State {
   data: Data[];
   getData: () => Promise<void>;
-  addData: (newData: Data) => Promise<void>;
-  updateData: (id: number, updatedData: Partial<Data>) => Promise<void>;
-  deleteData: (id: number) => Promise<void>;
+  addData: (newData: Omit<Data, 'id'>) => Promise<void>;
+  updateData: (id: string, updatedData: Partial<Omit<Data, 'id'>>) => Promise<void>;
+  deleteData: (id: string) => Promise<void>;
 }
 
 export const useStore = create<State>((set) => ({
   data: [],
   async getData() {
     try {
-      const response = await axios.get('http://localhost:3000/data');
+      const response = await axios.get<Data[]>('http://localhost:3000/data');
       set({ data: response.data });
-      console.log(response);
     } catch (error) {
       console.error(error);
     }
   },
   async addData(newData) {
     try {
-      await axios.post('http://localhost:3000/data', newData);
-      set((state) => ({ data: [...state.data, newData] }));
+      const id = uuidv4();
+      const dataWithId = { ...newData, id };
+      await axios.post('http://localhost:3000/data', dataWithId);
+      set((state) => ({ data: [...state.data, dataWithId] }));
     } catch (error) {
       console.error(error);
     }
@@ -46,7 +48,8 @@ export const useStore = create<State>((set) => ({
   async updateData(id, updatedData) {
     try {
       await axios.put(`http://localhost:3000/data/${id}`, updatedData);
-      await this.getData();
+      const data = await axios.get<Data[]>(`http://localhost:3000/data/${id}`);
+      set((state) => ({ data: state.data.map((d) => (d.id === id ? data.data[0] : d)) }));
     } catch (error) {
       console.error(error);
     }
