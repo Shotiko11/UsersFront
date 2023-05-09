@@ -53,9 +53,10 @@ export const useStore = create<State>((set) => ({
   async updateData(id, updatedData) {
     try {
       await axios.put(`http://localhost:3000/data/${id}`, updatedData);
-      const data = await axios.get<Data[]>(`http://localhost:3000/data/${id}`);
-      set((state) => ({
-        data: state.data.map((d) => (d.id === id ? data.data : d)),
+      const { data: updatedItem } = await axios.get<Data>(`http://localhost:3000/data/${id}`);
+  
+      set((state: State) => ({
+        data: state.data.map((item) => (item.id === id ? updatedItem : item))
       }));
     } catch (error) {
       console.error(error);
