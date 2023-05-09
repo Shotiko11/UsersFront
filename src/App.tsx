@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useStore, Data } from "./store";
-import { Table, Button } from "antd";
+import { Table, Button, Menu } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { AddUser } from "./AddUser";
 import { EditUser } from "./EditUser";
 import { Chart } from "./Chart";
+import { Route, Link, Switch } from "react-router-dom";
 
 function App() {
   const [selectedRow, setSelectedRow] = useState<object | null>(null);
@@ -88,39 +89,54 @@ function App() {
   ];
   return (
     <div className="App">
-      <Chart data={data} />
-      <Button onClick={showAddUserModal}>Add new user</Button>
-      <Table
-        dataSource={data}
-        columns={columns}
-        rowKey="id"
-        pagination={{ pageSize: 10 }}
-        onRow={(record) => {
-          return {
-            onDoubleClick: () => {
-              setSelectedRow(record);
-              setIsModalVisible(true);
-              console.dir(record);
-            },
-          };
-        }}
-      />
-      {!selectedRow?.id ? (
-        <AddUser
-          visible={isModalVisible}
-          onClose={handleCancel}
-          onAddUser={handleAddUser}
-        />
-      ) : (
-        <EditUser
-          visible={isModalVisible}
-          onClose={handleCancel}
-          onEditUser={handleUpdate}
-          userData={selectedRow}
-        />
-      )}
+      <Menu theme="light" mode="horizontal">
+        <Menu.Item key="home">
+          <Link to="/home">Home</Link>
+        </Menu.Item>
+        <Menu.Item key="chart">
+          <Link to="/chart">Chart</Link>
+        </Menu.Item>
+      </Menu>
+      <Switch>
+        <Route path="/home">
+          <Button onClick={showAddUserModal}>Add new user</Button>
+          <Table
+            dataSource={data}
+            columns={columns}
+            rowKey="id"
+            pagination={{ pageSize: 10 }}
+            onRow={(record) => {
+              return {
+                onDoubleClick: () => {
+                  setSelectedRow(record);
+                  setIsModalVisible(true);
+                },
+              };
+            }}
+          />
+          {!selectedRow?.id ? (
+            <AddUser
+              visible={isModalVisible}
+              onClose={handleCancel}
+              onAddUser={handleAddUser}
+            />
+          ) : (
+            <EditUser
+              visible={isModalVisible}
+              onClose={handleCancel}
+              onUpdateUser={handleUpdateUser}
+              selectedRow={selectedRow}
+            />
+          )}
+        </Route>
+        <Route path="/chart">
+          <Chart data={data} />
+        </Route>
+      </Switch>
     </div>
   );
+  
+  
 }
 
 export default App;
