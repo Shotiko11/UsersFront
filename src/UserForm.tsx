@@ -5,7 +5,7 @@ import { useEffect } from "react";
 interface UserFormProps {
   buttonTitle: string;
   handleSubmit: (values: FormValues) => void;
-  userData: FormValues;
+  userData?: FormValues;
 }
 
 interface FormValues {
@@ -13,12 +13,11 @@ interface FormValues {
   name: string;
   email: string;
   gender: string;
-  phone: string;
   address: {
     street: string;
     city: string;
-    number: string;
   };
+
 }
 
 const validatePhone = (rule: any, value: string, callback: any) => {

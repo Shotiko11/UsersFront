@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from "uuid";
 
 export interface Address {
   street: string;
-  number: string;
   city: string;
 }
 
@@ -30,7 +29,7 @@ export interface State {
 
 export const useStore = create<State>((set) => ({
   data: [],
-  getData: async () => {
+  async getData() {
     try {
       const response = await axios.get<Data[]>("http://localhost:3000/data");
       set({ data: response.data });
@@ -38,11 +37,11 @@ export const useStore = create<State>((set) => ({
       console.error(error);
     }
   },
-  addData: async (newData) => {
+  async addData(newData) {
     try {
       const id = uuidv4();
       const dataWithId = { ...newData, id };
-      const response = await axios.post<Data>(
+      const response = await axios.post(
         "http://localhost:3000/data",
         dataWithId
       );
@@ -51,24 +50,24 @@ export const useStore = create<State>((set) => ({
       console.error(error);
     }
   },
-  updateData: async (id, updatedData) => {
+  async updateData(id, updatedData) {
     try {
       await axios.put(`http://localhost:3000/data/${id}`, updatedData);
-      const response = await axios.get<Data>(`http://localhost:3000/data/${id}`);
+      const data = await axios.get<Data[]>(`http://localhost:3000/data/${id}`);
       set((state) => ({
-        data: state.data.map((d) => (d.id === id ? response.data : d)),
+        data: state.data.map((d) => (d.id === id ? data.data : d)),
       }));
     } catch (error) {
       console.error(error);
     }
   },
-  deleteData: async (id) => {
+  async deleteData(id) {
     try {
       await axios.delete(`http://localhost:3000/data/${id}`);
-      set((state) => ({ data: state.data.filter((d) => d.id !== id) }));
+      console.dir(id);
+      set((state) => ({ data: state.data.filter((d) => d.id != id) }));
     } catch (error) {
       console.error(error);
     }
   },
 }));
-

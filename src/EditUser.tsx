@@ -7,12 +7,11 @@ interface FormValues {
   name: string;
   email: string;
   gender: string;
-  phone: string;
   address: {
     street: string;
     city: string;
-    number: string;
   };
+  phone: number;
 }
 interface EditUserProps {
   visible: boolean;

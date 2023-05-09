@@ -72,6 +72,11 @@ function App() {
       key: "city",
     },
     {
+      title: "Phone",
+      dataIndex: "phone",
+      key: "phone"
+    },    
+    {
       title: "",
       dataIndex: "actions",
       key: "actions",

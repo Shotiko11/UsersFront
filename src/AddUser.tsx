@@ -34,7 +34,6 @@ export const AddUser: React.FC<AddUserProps> = ({ visible, onClose }) => {
       address: {
         street: values.address.street,
         city: values.address.city,
-        number: values.address.number,
       },
       phone: values.phone,
     };
