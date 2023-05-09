@@ -4,6 +4,7 @@ import { Table, Button } from "antd";
 import { ColumnsType } from "antd/es/table";
 import { AddUser } from "./AddUser";
 import { EditUser } from "./EditUser";
+import { Chart } from "./Chart";
 
 function App() {
   const [selectedRow, setSelectedRow] = useState<object | null>(null);
@@ -87,6 +88,7 @@ function App() {
   ];
   return (
     <div className="App">
+      <Chart data={data} />
       <Button onClick={showAddUserModal}>Add new user</Button>
       <Table
         dataSource={data}
