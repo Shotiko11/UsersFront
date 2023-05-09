@@ -115,19 +115,19 @@ function App() {
             }}
           />
           {!selectedRow?.id ? (
-            <AddUser
-              visible={isModalVisible}
-              onClose={handleCancel}
-              onAddUser={handleAddUser}
-            />
-          ) : (
-            <EditUser
-              visible={isModalVisible}
-              onClose={handleCancel}
-              onUpdateUser={handleUpdateUser}
-              selectedRow={selectedRow}
-            />
-          )}
+  <AddUser
+    visible={isModalVisible}
+    onClose={handleCancel}
+    onAddUser={handleAddUser}
+  />
+) : (
+  <EditUser
+    visible={isModalVisible}
+    onClose={handleCancel}
+    onUpdate={handleUpdate} // Change the prop name to onUpdate
+    selectedRow={selectedRow}
+  />
+)}
         </Route>
         <Route path="/chart">
           <Chart data={data} />

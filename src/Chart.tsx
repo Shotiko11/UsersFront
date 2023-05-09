@@ -8,7 +8,6 @@ interface ChartData {
 }
 
 
-  
 
 const group = (data: Data[]) => {
     const groupList = (data || []).reduce((array: {[key: string]: any}, user) => {
@@ -23,6 +22,7 @@ const group = (data: Data[]) => {
 
   return Object.entries(groupList);
 };
+
 
 export const Chart: React.FC<{ data: Data[] }> = ({ data }) => {
   const list = group(data);
