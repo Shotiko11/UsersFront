@@ -124,8 +124,9 @@ function App() {
   <EditUser
     visible={isModalVisible}
     onClose={handleCancel}
-    onUpdate={handleUpdate} // Change the prop name to onUpdate
+    onEditUser={handleUpdate} // Change the prop name to onUpdate
     selectedRow={selectedRow}
+    userData={selectedRow}
   />
 )}
         </Route>
